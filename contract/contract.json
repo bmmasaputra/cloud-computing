@@ -1,0 +1,28 @@
+{   
+    "method": "POST",
+    "path": "/user",
+    "body": {
+        "name": "string",
+        "email": "string",
+        "password": "string",
+        "token": "string",
+        "allergy": [
+            {
+                "allergId": "int",
+                "allergyName": "string"
+            }
+        ]
+    },
+    "response": [
+        {
+            "success": true,
+            "message": "User created sucessfully",
+            "userId": "string"
+        },
+        {
+            "success": false,
+            "message": "Failed to create user",
+            "error": "Email already used"
+        }
+    ]
+}
