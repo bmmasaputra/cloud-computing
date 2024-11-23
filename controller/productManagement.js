@@ -11,7 +11,7 @@ async function addProductToHistory(req, res) {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ success: false, message: 'Authorization token is required.' });
+        return res.status(401).json({ success: false, message: 'Authorization token is required' });
     }
 
     try {
@@ -36,10 +36,10 @@ async function addProductToHistory(req, res) {
             sugar, 
             sugar_ing 
         } = req.body;
-        
+
         // Validate required fields
         if (!name || !grades_id || !calories || !protein || !fat || !fiber || !carbo || !sugar) {
-            return res.status(400).json({ success: false, message: 'All required fields must be provided.' });
+            return res.status(400).json({ success: false, message: 'All fields required' });
         }
 
         // Generate unique IDs
@@ -86,6 +86,24 @@ async function addProductToHistory(req, res) {
             },
         });
 
+        const dataAllergen = req.body.allergy;
+        const insertDataAllergy = [];
+
+        dataAllergen.forEach(element => {
+            const data = {
+                id: nanoid(),
+                product_id: historyProduct.product.id,
+                allergy_id: element.allergy_id,
+                allergen: element.allergen,
+            };
+
+            insertDataAllergy.push(data);
+        });
+
+        const productAllergen = await prisma.product_allergen.createMany({
+            data: insertDataAllergy,
+        })
+
         // Return the success response
         res.status(201).json({
             success: true,
@@ -94,12 +112,12 @@ async function addProductToHistory(req, res) {
         });
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
         }
 
         res.status(500).json({
             success: false,
-            message: 'Internal server error.',
+            message: 'Internal server error',
             error: error.message,
         });
     } finally {
@@ -125,7 +143,16 @@ async function getAllProduct(req, res) {
                 users_id: userId, // Filter by the user's ID
             },
             include: {
-                product: true, // Include the product details
+                product: {
+                    include: {
+                        grade: true,
+                        product_allergen: {
+                            include: {
+                                allergy: true,
+                            },
+                        },
+                    },
+                }, 
             },
         });
 
@@ -136,7 +163,7 @@ async function getAllProduct(req, res) {
         res.status(200).json({
             success: true,
             message: 'Products retrieved successfully.',
-            products: userProducts,
+            userHistory: userProducts,
         });
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
@@ -153,8 +180,55 @@ async function getAllProduct(req, res) {
     }
 }
 
-async function getProductById(params) {
-    const { }
+async function getProductById(req, res) {
+    const token = req.headers.authorization?.split(' ')[1];
+    const { id } = req.params;
+
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Authorization token is required.' });
+    }
+
+    try {
+        // Decode the token to get the user ID
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        const productDetails = await prisma.product.findMany({
+            where: {
+                id: id
+            },
+            include: {
+                history_product: true,
+                grade: true,
+                product_allergen: {
+                    include: {
+                        allergy: true
+                    }
+                }
+            }
+        });
+
+        if (productDetails.length === 0) {
+            return res.status(404).json({ success: false, message: 'Product Not Found.' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Product retrieved successfully.',
+            productDetails,
+        });
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ success: false, message: 'Invalid or expired token.' });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error.',
+            error: error.message,
+        });
+    } finally {
+        await prisma.$disconnect();
+    }
 }
 
-export { addProductToHistory, getAllProduct };
+export { addProductToHistory, getAllProduct, getProductById };

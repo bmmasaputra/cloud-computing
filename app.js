@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { signUp, login, refreshToken } from './controller/userAuth.js';
-import { addProductToHistory, getAllProduct } from './controller/productManagement.js';
+import { addProductToHistory, getAllProduct, getProductById } from './controller/productManagement.js';
+import { getAllAllergy, setUserAllergy, detectAllergy } from './controller/allergy.js';
+import getUserData from './controller/userData.js';
 
 const app = express();
 const port = 5000;
@@ -16,33 +18,29 @@ app.use(cors({
 app.get('/', () => {
     res.status(200).json({
         success: true,
-        message: "Selamat datang di Fits"
+        message: "Welcome to FITS! Your personal food advisor"
     })
 });
+
+// Public
+app.post('/api/v1/users', signUp);
+app.post('/api/v1/users/login', login);
+app.get('/api/v1/users/:id', getUserData);
 
 // User Auth
-app.post('/signup', signUp);
-app.post('/login', login);
-app.post('/refreshtoken', refreshToken);
+app.post('/api/v1/refreshtoken', refreshToken);
 
-// History Management
-app.post('/products', addProductToHistory);
-app.get('/products', getAllProductByUser);
-app.get('/product/:id', ); // Menampilkan product berdasarkan id product (martha)
+app.post('/api/v1/products', addProductToHistory);
+app.get('/api/v1/products', getAllProduct);
+app.get('/api/v1/products/:id', getProductById); // Menampilkan product berdasarkan id product (martha)
 
-app.get('/allergy', ); // Menampilkan semua allergy (martha)
-app.post('/allergy/detect', ); // Mendeteksi allergy
+app.get('/api/v1/allergy', getAllAllergy); // Menampilkan semua allergy (martha)
+app.post('/api/v1/users/allergy', setUserAllergy);
+app.post('/api/v1/products/allergy', detectAllergy); // Mendeteksi allergy
 
-
-
-app.get('/user/:id', (req, res) => {
-    const { id } = req.params;
-    res.status(200).json({
-        message: "User found",
-        data: `Hello user id ${id}`
-    })
-});
+app.get('/api/v1/article')
+app.get('/api/v1/article/:id')
 
 app.listen(port, () => {
-    console.log(`App running on ${port}`)
+    console.log(`App running on port ${port}`)
 });

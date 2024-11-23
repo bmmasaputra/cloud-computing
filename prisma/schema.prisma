@@ -12,19 +12,19 @@ model allergy {
   class            String?            @db.VarChar(255)
   type             String?            @db.VarChar(255)
   group            String?            @db.VarChar(255)
-  allergy_name     String?            @db.VarChar(255)
   allergen         String?            @db.VarChar(255)
+  allergy_name     String?            @db.VarChar(255)
   product_allergen product_allergen[]
   users_allergy    users_allergy[]
 }
 
 model article {
-  id        Int      @id
-  title     String?  @db.VarChar(255)
-  author    String?  @db.VarChar(255)
-  content   String?  @db.Text
-  img_url   String?  @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(0)
+  id      Int      @id
+  title   String?  @db.VarChar(255)
+  author  String?  @db.VarChar(255)
+  content String?  @db.Text
+  img_url String?  @db.VarChar(255)
+  date    DateTime @default(now()) @db.Date
 }
 
 model grade {

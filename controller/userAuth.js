@@ -14,7 +14,7 @@ async function signUp(req, res) {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-        return res.status(400).json({success: false, message: 'All fields are required.'});
+        return res.status(400).json({success: false, message: 'All fields are required'});
     }
 
     try {
@@ -55,7 +55,7 @@ async function signUp(req, res) {
 
         res.status(201).json({
             success: true,
-            message: 'User registered succesfully.',
+            message: 'User created',
             accessToken,
             refreshToken
         });
@@ -75,7 +75,7 @@ async function login(req, res) {
 
     // Validate request body
     if (!email || !password) {
-        return res.status(400).json({ success: false, message: 'Email and password are required.' });
+        return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
     try {
@@ -86,13 +86,13 @@ async function login(req, res) {
 
         // Check if user exists
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found.' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
         // Compare passwords
         const isPasswordValid = bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Generate JWT token
@@ -112,16 +112,17 @@ async function login(req, res) {
         // Send success response
         res.status(200).json({
             success: true,
-            message: 'Login successful.',
+            message: 'Login successful',
             accessToken,
-            refreshToken
+            refreshToken,
+            user
         });
     } catch (error) {
         console.error('Login Error:', error);
         res.status(500).json({
             success: false,
-            message: 'Internal server error.',
-            error
+            message: 'Internal server error',
+            error: error.name
         });
     } finally {
         await prisma.$disconnect()
@@ -133,7 +134,7 @@ async function refreshToken(req, res) {
 
     // Validate the refresh token
     if (!refreshToken) {
-        return res.status(400).json({ success: false, message: 'Refresh token is required.' });
+        return res.status(400).json({ success: false, message: 'Refresh token required' });
     }
 
     try {
@@ -146,7 +147,7 @@ async function refreshToken(req, res) {
         });
 
         if (!user || user.refresh_token !== refreshToken) {
-            return res.status(403).json({ success: false, message: 'Invalid refresh token.' });
+            return res.status(403).json({ success: false, message: 'Invalid refresh token' });
         }
 
         // Generate a new access token
@@ -162,12 +163,12 @@ async function refreshToken(req, res) {
 
         res.status(200).json({
             success: true,
-            message: 'Access token refreshed successfully.',
+            message: 'Access token refreshed',
             accessToken: newAccessToken,
         });
     } catch (error) {
         console.error('Error refreshing token:', error);
-        res.status(403).json({ success: false, message: 'Invalid or expired refresh token.' });
+        res.status(403).json({ success: false, message: 'Invalid refresh token' });
     } finally {
         await prisma.$disconnect();
     }
