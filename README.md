@@ -170,7 +170,8 @@ Before starting, ensure the following tools are installed on your system:
    **Response:**
    ```json
    {
-     "message": "Preferences updated successfully"
+       "success": true,
+       "massage": "User allergy added"
    }
    ```
 
