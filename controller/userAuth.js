@@ -81,7 +81,7 @@ async function login(req, res) {
     try {
         // Find user by email
         const user = await prisma.users.findFirst({
-            where: { email },
+            where: { email }
         });
 
         // Check if user exists
@@ -90,7 +90,8 @@ async function login(req, res) {
         }
 
         // Compare passwords
-        const isPasswordValid = bcrypt.compare(password, user.password);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
         if (!isPasswordValid) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }

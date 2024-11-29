@@ -4,6 +4,7 @@ import { signUp, login, refreshToken } from './controller/userAuth.js';
 import { addProductToHistory, getAllProduct, getProductById } from './controller/productManagement.js';
 import { getAllAllergy, setUserAllergy, detectAllergy } from './controller/allergy.js';
 import getUserData from './controller/userData.js';
+import { getAllArticle, getArticleById } from './controller/article.js';
 
 const app = express();
 const port = 5000;
@@ -38,8 +39,8 @@ app.get('/api/v1/allergy', getAllAllergy); // Menampilkan semua allergy (martha)
 app.post('/api/v1/users/allergy', setUserAllergy);
 app.post('/api/v1/products/allergy', detectAllergy); // Mendeteksi allergy
 
-app.get('/api/v1/article')
-app.get('/api/v1/article/:id')
+app.get('/api/v1/articles', getAllArticle);
+app.get('/api/v1/articles/:id', getArticleById);
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`)
