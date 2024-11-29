@@ -16,7 +16,7 @@ app.use(cors({
     origin: true
 }));
 
-app.get('/', () => {
+app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
         message: "Welcome to FITS! Your personal food advisor"
