@@ -25,6 +25,7 @@ async function getAllArticle(req, res) {
             const formatedArticle = {
                 id: article.id,
                 title: article.title,
+                description: article.description,
                 author: article.author,
                 content: md.render(article.content).replaceAll(/\n/g, '<br>'),
                 img_url: article.img_url,
@@ -81,7 +82,15 @@ async function getArticleById(req, res) {
         res.status(200).json({
             success: true,
             message: "Article found",
-            article
+            article: {
+                id: article.id,
+                title: article.title,
+                description: article.description,
+                author: article.author,
+                content: md.render(article.content).replaceAll(/\n/g, '<br>'),
+                img_url: article.img_url,
+                date: article.date 
+            }
         })
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
