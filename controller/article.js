@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-import { nanoid } from 'nanoid';
 import dotenv from 'dotenv';
+import MarkdownIt from 'markdown-it';
 
 dotenv.config();
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET;
+const md = new MarkdownIt();
 
 async function getAllArticle(req, res) {
     const token = req.headers.authorization?.split(' ')[1];
@@ -17,12 +18,26 @@ async function getAllArticle(req, res) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         
-        const article = await prisma.article.findMany();
+        const articles = await prisma.article.findMany();
+        const formatedArticles = [];
+
+        articles.forEach(article => {
+            const formatedArticle = {
+                id: article.id,
+                title: article.title,
+                author: article.author,
+                content: md.render(article.content).replaceAll(/\n/g, '<br>'),
+                img_url: article.img_url,
+                date: article.date
+            };
+
+            formatedArticles.push(formatedArticle);
+        });
 
         res.status(200).json({
             success: true,
             message: "Article retrieved successfully",
-            article
+            formatedArticles
         })
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {

@@ -12,6 +12,7 @@ async function getAllAllergy(req, res) {
         const allergy = await prisma.allergy.findMany({
             distinct: ['allergy_name'],
             select: {
+                id: true,
                 allergy_name: true
             }
         });

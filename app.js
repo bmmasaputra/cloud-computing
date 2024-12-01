@@ -16,7 +16,7 @@ app.use(cors({
     origin: true
 }));
 
-app.get('/', () => {
+app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
         message: "Welcome to FITS! Your personal food advisor"
@@ -26,7 +26,7 @@ app.get('/', () => {
 // Public
 app.post('/api/v1/users', signUp);
 app.post('/api/v1/users/login', login);
-app.get('/api/v1/users/:id', getUserData);
+app.get('/api/v1/users/', getUserData);
 
 // User Auth
 app.post('/api/v1/refreshtoken', refreshToken);

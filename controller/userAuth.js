@@ -116,7 +116,6 @@ async function login(req, res) {
             message: 'Login successful',
             accessToken,
             refreshToken,
-            user
         });
     } catch (error) {
         console.error('Login Error:', error);
