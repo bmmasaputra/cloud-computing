@@ -37,7 +37,7 @@ async function getAllArticle(req, res) {
         res.status(200).json({
             success: true,
             message: "Article retrieved successfully",
-            formatedArticles
+            article: formatedArticles
         })
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {

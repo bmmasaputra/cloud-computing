@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { signUp, login, refreshToken } from './controller/userAuth.js';
 import { addProductToHistory, getAllProduct, getProductById } from './controller/productManagement.js';
-import { getAllAllergy, setUserAllergy, detectAllergy } from './controller/allergy.js';
+import { getAllAllergy, setUserAllergy, detectAllergy, deleteUserAllergy } from './controller/allergy.js';
 import getUserData from './controller/userData.js';
 import { getAllArticle, getArticleById } from './controller/article.js';
 
@@ -38,6 +38,7 @@ app.get('/api/v1/products/:id', getProductById); // Menampilkan product berdasar
 app.get('/api/v1/allergy', getAllAllergy); // Menampilkan semua allergy (martha)
 app.post('/api/v1/users/allergy', setUserAllergy);
 app.post('/api/v1/products/allergy', detectAllergy); // Mendeteksi allergy
+app.delete('/api/v1/users/allergy', deleteUserAllergy);
 
 app.get('/api/v1/articles', getAllArticle);
 app.get('/api/v1/articles/:id', getArticleById);
