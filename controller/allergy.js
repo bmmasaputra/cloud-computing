@@ -183,14 +183,18 @@ async function deleteUserAllergy(req, res) {
         const decoded = jwt.verify(token, JWT_SECRET);
         const userId =  decoded.id;
 
-        const deleteAllergy = await prisma.users_allergy.deleteMany({
-            where: {
-                AND: [
-                    {allergy_id: id},
-                    {users_id: userId}
-                ]
-            }
-        });
+        await Promise.all(
+            id.map(async (element) => {
+                await prisma.users_allergy.deleteMany({
+                    where: {
+                        AND: [
+                            { allergy_id: element },
+                            { users_id: userId }
+                        ]
+                    }
+                });
+            })
+        );
 
         res.status(200).json({
             success: true,
@@ -206,6 +210,8 @@ async function deleteUserAllergy(req, res) {
             message: 'Internal server error',
             error: error.message,
         });
+    } finally {
+        await prisma.$disconnect();
     }
 }
 
