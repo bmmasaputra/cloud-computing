@@ -12,6 +12,7 @@ async function getAllAllergy(req, res) {
         const allergy = await prisma.allergy.findMany({
             distinct: ['allergy_name'],
             select: {
+                id: true,
                 allergy_name: true
             }
         });
@@ -47,6 +48,23 @@ async function setUserAllergy(req, res) {
         const decoded = jwt.verify(token, JWT_SECRET);
         const userId = decoded.id;
         const userAllergies = [];
+
+        const usersAllergy = await prisma.users_allergy.findMany({
+            where: {
+                users_id: userId
+            }
+        })
+        
+        const allergyExists = usersAllergy.find(allergy => 
+            data.find(element => allergy.allergy_id === element.id)
+        );
+        
+        if (allergyExists) {
+            return res.status(400).json({
+                success: false,
+                message: "Allergy already exists"
+            });
+        }
 
         data.forEach(element => {
             const data = {
@@ -149,4 +167,52 @@ async function detectAllergy(req, res) {
     }
 }
 
-export { getAllAllergy, setUserAllergy, detectAllergy };
+async function deleteUserAllergy(req, res) {
+    const token = req.headers.authorization?.split(' ')[1];
+    const { id } = req.body;
+
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Authorization token is required.' });
+    }
+
+    if (!id) {
+        return res.status(400).json({ success: false, message: 'All fields required'});
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const userId =  decoded.id;
+
+        await Promise.all(
+            id.map(async (element) => {
+                await prisma.users_allergy.deleteMany({
+                    where: {
+                        AND: [
+                            { allergy_id: element },
+                            { users_id: userId }
+                        ]
+                    }
+                });
+            })
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Allergy deleted"
+        });
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message,
+        });
+    } finally {
+        await prisma.$disconnect();
+    }
+}
+
+export { getAllAllergy, setUserAllergy, detectAllergy, deleteUserAllergy };
