@@ -37,7 +37,7 @@ app.get('/api/v1/products/:id', getProductById); // Menampilkan product berdasar
 
 app.get('/api/v1/allergy', getAllAllergy); // Menampilkan semua allergy (martha)
 app.post('/api/v1/users/allergy', setUserAllergy);
-app.post('/api/v1/products/allergy', detecccccctAllergy); // Mendeteksi allergy
+app.post('/api/v1/products/allergy', detectAllergy); // Mendeteksi allergy
 app.delete('/api/v1/users/allergy', deleteUserAllergy);
 
 app.get('/api/v1/articles', getAllArticle);
