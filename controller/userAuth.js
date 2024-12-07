@@ -81,7 +81,12 @@ async function login(req, res) {
     try {
         // Find user by email
         const user = await prisma.users.findFirst({
-            where: { email }
+            where: { email },
+            select: {
+                id: true,
+                name: true,
+                email: true
+            }
         });
 
         // Check if user exists
@@ -116,6 +121,7 @@ async function login(req, res) {
             message: 'Login successful',
             accessToken,
             refreshToken,
+            user
         });
     } catch (error) {
         console.error('Login Error:', error);
