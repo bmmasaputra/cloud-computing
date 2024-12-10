@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import morgan from 'morgan';
 import { signUp, login, refreshToken } from './controller/userAuth.js';
 import { addProductToHistory, getAllProduct, getProductById } from './controller/productManagement.js';
 import { getAllAllergy, setUserAllergy, detectAllergy, deleteUserAllergy } from './controller/allergy.js';
@@ -8,6 +9,9 @@ import { getAllArticle, getArticleById } from './controller/article.js';
 
 const app = express();
 const port = 5000;
+
+// Use Morgan for logging HTTP requests (using 'dev' format)
+app.use(morgan('dev'));
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
