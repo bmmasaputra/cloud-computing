@@ -11,7 +11,7 @@ const app = express();
 const port = 5000;
 
 // Use Morgan for logging HTTP requests (using 'dev' format)
-app.use(morgan('dev'));
+app.use(morgan('combined'));
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
