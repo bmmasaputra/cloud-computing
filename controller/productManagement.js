@@ -142,6 +142,11 @@ async function getAllProduct(req, res) {
             where: {
                 users_id: userId, // Filter by the user's ID
             },
+            orderBy: [
+                {
+                    created_at: 'desc'
+                }
+            ],
             include: {
                 product: {
                     include: {
