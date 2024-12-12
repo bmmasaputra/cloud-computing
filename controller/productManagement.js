@@ -22,7 +22,9 @@ async function addProductToHistory(req, res) {
         // Extract data from the request body
         const { 
             name,
-            grades_id, 
+            grades_id,
+            overall,
+            health_assessment, 
             calories, 
             calories_ing, 
             protein, 
@@ -66,6 +68,8 @@ async function addProductToHistory(req, res) {
                                 id: grades_id
                             }
                         },
+                        overall,
+                        health_assessment, 
                         calories,
                         calories_ing,
                         protein,
