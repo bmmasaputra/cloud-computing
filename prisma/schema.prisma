@@ -55,25 +55,27 @@ model label {
 }
 
 model product {
-  id               String             @id @db.VarChar(255)
-  name             String?            @db.VarChar(255)
-  grades_id        Int?
-  calories         String?            @db.VarChar(255)
-  calories_ing     String?            @db.VarChar(255)
-  protein          String?            @db.VarChar(255)
-  protein_ing      String?            @db.VarChar(255)
-  fat              String?            @db.VarChar(255)
-  fat_ing          String?            @db.VarChar(255)
-  fiber            String?            @db.VarChar(255)
-  fiber_ing        String?            @db.VarChar(255)
-  carbo            String?            @db.VarChar(255)
-  carbo_ing        String?            @db.VarChar(255)
-  sugar            String?            @db.VarChar(255)
-  sugar_ing        String?            @db.VarChar(255)
-  history_product  history_product[]
-  grade            grade?             @relation(fields: [grades_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_ibfk_1")
-  product_allergen product_allergen[]
-  product_label    product_label[]
+  id                String             @id @db.VarChar(255)
+  name              String?            @db.VarChar(255)
+  grades_id         Int?
+  overall           String             @db.Text
+  health_assessment String             @db.Text
+  calories          String?            @db.VarChar(255)
+  calories_ing      String?            @db.VarChar(255)
+  protein           String?            @db.VarChar(255)
+  protein_ing       String?            @db.VarChar(255)
+  fat               String?            @db.VarChar(255)
+  fat_ing           String?            @db.VarChar(255)
+  fiber             String?            @db.VarChar(255)
+  fiber_ing         String?            @db.VarChar(255)
+  carbo             String?            @db.VarChar(255)
+  carbo_ing         String?            @db.VarChar(255)
+  sugar             String?            @db.VarChar(255)
+  sugar_ing         String?            @db.VarChar(255)
+  history_product   history_product[]
+  grade             grade?             @relation(fields: [grades_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_ibfk_1")
+  product_allergen  product_allergen[]
+  product_label     product_label[]
 
   @@index([grades_id], map: "grades_id")
 }

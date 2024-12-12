@@ -98,10 +98,10 @@ async function login(req, res) {
 
         // Generate JWT token
         const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-            expiresIn: '7d', // Set token expiration as needed
+            expiresIn: '30d', // Set token expiration as needed
         });
         const refreshToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, {
-            expiresIn: '30d', // Set token expiration as needed
+            expiresIn: '360d', // Set token expiration as needed
         });
 
         // Update user token in database
