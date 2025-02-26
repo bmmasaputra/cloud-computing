@@ -42,7 +42,6 @@ export const productService = {
             name,
             grade: { connect: { id: grades_id } },
             overall,
-            health_assessment,
             calories,
             calories_ing,
             protein,
