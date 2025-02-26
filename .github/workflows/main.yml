@@ -30,6 +30,10 @@ jobs:
           
           # Pull the latest changes
           git pull origin main
+
+          # Pull database latest changes
+          npx prisma db pull
+          npx prisma generate
           
           npm install
           

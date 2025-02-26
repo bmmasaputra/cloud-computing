@@ -1,52 +1,42 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import { signUp, login, refreshToken } from './controller/userAuth.js';
-import { addProductToHistory, getAllProduct, getProductById } from './controller/productManagement.js';
-import { getAllAllergy, setUserAllergy, detectAllergy, deleteUserAllergy } from './controller/allergy.js';
-import getUserData from './controller/userData.js';
-import { getAllArticle, getArticleById } from './controller/article.js';
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import authRouter from "./routes/authRouter.js";
+import productRouter from "./routes/productRouter.js";
+import allergyRouter from "./routes/allergyRouter.js";
+import userRouter from "./routes/userRouter.js";
+import articleRouter from "./routes/articleRouter.js";
 
 const app = express();
-const port = 5000;
 
 // Use Morgan for logging HTTP requests (using 'dev' format)
-app.use(morgan('combined'));
+app.use(morgan("combined"));
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-    origin: true
-}));
+app.use(cors({ origin: true }));
 
-app.get('/', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Welcome to FITS! Your personal food advisor"
-    })
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Welcome to FITS! Your personal food advisor",
+  });
 });
 
-// Public
-app.post('/api/v1/users', signUp);
-app.post('/api/v1/users/login', login);
-app.get('/api/v1/users/', getUserData);
+// Auth routes
+app.use("/api/v1", authRouter);
 
-// User Auth
-app.post('/api/v1/refreshtoken', refreshToken);
+// User routes
+app.use("/api/v1", userRouter);
 
-app.post('/api/v1/products', addProductToHistory);
-app.get('/api/v1/products', getAllProduct);
-app.get('/api/v1/products/:id', getProductById); // Menampilkan product berdasarkan id product (martha)
+// Product routes
+app.use("/api/v1", productRouter);
 
-app.get('/api/v1/allergy', getAllAllergy); // Menampilkan semua allergy (martha)
-app.post('/api/v1/users/allergy', setUserAllergy);
-app.post('/api/v1/products/allergy', detectAllergy); // Mendeteksi allergy
-app.delete('/api/v1/users/allergy', deleteUserAllergy);
+// Allergy routes
+app.use("/api/v1", allergyRouter);
 
-app.get('/api/v1/articles', getAllArticle);
-app.get('/api/v1/articles/:id', getArticleById);
+// Articles
+app.use("/api/v1", articleRouter)
 
-app.listen(port, () => {
-    console.log(`App running on port ${port}`)
-});
+export default app; // Exporting app for testing

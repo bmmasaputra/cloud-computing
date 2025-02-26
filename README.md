@@ -198,7 +198,7 @@ Before starting, ensure the following tools are installed on your system:
 
 ## Additional Resources
 
-- [FITS-AI Documentation](<documentation-url>)
+- [FITS-AI Documentation](https://documenter.getpostman.com/view/39461222/2sAYHwK5UN)
 - [Postman Collection](<postman-collection-url>)
 
 If you encounter issues not covered here, please contact support at [bimagung2203@gmail.com](mailto:bimagung2203@gmail.com).
